@@ -1,0 +1,4 @@
+{
+  "sms_sender_name": "БИРЖА.ком",
+  "sms_confirmation_code": "Ваш код подтверждения: {{.ConfirmCode}}"
+}
