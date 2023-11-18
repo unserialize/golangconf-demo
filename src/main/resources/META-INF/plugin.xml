@@ -1,0 +1,16 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>com.github.unserialize.golangconfdemo</id>
+    <name>Golangconf-Demo Template</name>
+    <vendor>unserialize</vendor>
+    <description>This is a plugin description, shown aside its name in a plugin list</description>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.plugins.go</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+    <applicationListeners>
+    </applicationListeners>
+</idea-plugin>
