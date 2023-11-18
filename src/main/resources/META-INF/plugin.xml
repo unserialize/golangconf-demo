@@ -10,6 +10,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.inlayProvider implementationClass="com.github.unserialize.golangconfdemo.MyHints" language="go" />
+        <psi.referenceContributor implementation="com.github.unserialize.golangconfdemo.MyContributor" language="go" />
     </extensions>
 
     <applicationListeners>

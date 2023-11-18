@@ -6,10 +6,15 @@ import com.goide.psi.GoValue
 import com.intellij.codeInsight.hints.*
 import com.intellij.codeInsight.hints.presentation.InsetPresentation
 import com.intellij.codeInsight.hints.presentation.PresentationFactory
+import com.intellij.json.psi.JsonFile
+import com.intellij.json.psi.JsonObject
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.editor.impl.EditorImpl
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiFile
+import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.*
+import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.util.ProcessingContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import java.io.File
@@ -52,4 +57,32 @@ class MyHints : InlayHintsProvider<NoSettings> {
     }
 
     override fun createSettings() = NoSettings()
+}
+
+class MyContributor : PsiReferenceContributor() {
+    override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
+        registrar.registerReferenceProvider(
+            PlatformPatterns.psiElement(GoStringLiteral::class.java),
+            object : PsiReferenceProvider() {
+                override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
+                    // todo copy paste
+                    if (element !is GoStringLiteral)
+                        return arrayOf()
+
+                    if (element.parent !is GoValue && element.parent.parent !is GoElement)
+                        return arrayOf()
+                    val key = (element.parent.parent as GoElement).key ?: return arrayOf()
+                    if (key.text != "MessageID")
+                        return arrayOf()
+
+                    return arrayOf(object : PsiReferenceBase<GoStringLiteral>(element) {
+                        override fun resolve(): PsiElement? {
+                            val files = FilenameIndex.getFilesByName(element.project, "ru.json", GlobalSearchScope.projectScope(element.project))
+                            val jsonFile = files.firstOrNull() as? JsonFile ?: return null
+                            return (jsonFile.topLevelValue as JsonObject).findProperty(element.text.trim('"'))
+                        }
+                    })
+                }
+            })
+    }
 }
