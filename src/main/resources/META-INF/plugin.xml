@@ -9,6 +9,7 @@
     <depends>org.jetbrains.plugins.go</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <codeInsight.inlayProvider implementationClass="com.github.unserialize.golangconfdemo.MyHints" language="go" />
     </extensions>
 
     <applicationListeners>
